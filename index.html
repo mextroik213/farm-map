@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ферма «Агроинвест» — интерактивная карта объектов</title>
+<style>
+:root{--bg:#eef0f3;--panel:#fff;--panel-alt:#f7f8fa;--border:#d0d7de;--border-strong:#b0b8c1;--text:#1f2933;--text-muted:#6b7684;--text-light:#9aa5b1;--accent:#1a3d7c;--accent-soft:#e8eef7;--topbar-h:64px;--sidebar-w:340px;--radius:2px;--shadow:0 6px 20px rgba(15,23,42,.14)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:13px;color:var(--text);background:var(--bg);overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.topbar{flex:0 0 var(--topbar-h);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:3px solid #0f2549;z-index:100}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand-mark{flex:0 0 auto;width:36px;height:36px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700}
+.brand-text h1{font-size:14px;font-weight:600;margin:0;letter-spacing:.6px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-text p{font-size:11px;color:rgba(255,255,255,.7);margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-nav{display:flex;align-items:center;gap:18px;font-size:11px;color:rgba(255,255,255,.75)}
+.topbar-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid rgba(255,255,255,.3);font-size:10px;text-transform:uppercase;letter-spacing:.6px}
+.topbar-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:#4caf50}
+#auth-btn{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);cursor:pointer;padding:4px 12px;border-radius:2px;font:inherit;font-size:11px}
+#auth-btn:hover{background:rgba(255,255,255,.1);border-color:#fff}
+#topbar-role{font-weight:600;color:#fff}
+.workspace{flex:1;display:flex;min-height:0}
+#sidebar{flex:0 0 var(--sidebar-w);width:var(--sidebar-w);background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:10}
+.sidebar-section{padding:16px 18px 14px;border-bottom:1px solid var(--border)}
+.sidebar-section h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.sidebar-section.grow{flex:1;overflow-y:auto;min-height:0;padding-bottom:4px}
+#search-input{width:100%;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font:inherit;font-size:13px}
+#search-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+#search-results{list-style:none;margin:8px 0 0;padding:0;max-height:280px;overflow-y:auto;border:1px solid var(--border)}
+#search-results:empty{border:none}
+#search-results li{padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;font-size:12.5px}
+#search-results li:last-child{border-bottom:none}
+#search-results li:hover{background:var(--accent-soft)}
+#search-results .res-layer{display:block;color:var(--text-muted);font-size:10.5px;margin-top:3px}
+.layer-tree{padding-top:2px}
+.node-head{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:var(--radius);user-select:none;font-size:12.5px;border-bottom:1px solid var(--border)}
+.node-head:hover{background:var(--accent-soft)}
+.node-head .cb{flex:0 0 auto;margin:0;width:14px;height:14px;accent-color:var(--accent);cursor:pointer}
+.node-head .swatch{width:12px;height:12px;flex:0 0 auto;border:1px solid rgba(0,0,0,.25);border-radius:1px}
+.node-head .name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.node-head .count{color:var(--text-muted);font-size:10.5px;flex:0 0 auto;min-width:22px;text-align:right}
+.node-head .label-toggle{flex:0 0 auto;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:0 5px;height:18px;min-width:24px;font-size:10px;font-weight:700;color:var(--accent);cursor:pointer;font-family:inherit}
+.node-head .label-toggle:hover{background:var(--accent-soft);border-color:var(--accent)}
+.node-head .label-toggle.off{color:var(--text-light);opacity:.6}
+.sidebar-footer{flex:0 0 auto;padding:10px 18px;font-size:10.5px;color:var(--text-muted);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--panel-alt)}
+.btn-mini{background:var(--panel);border:1px solid var(--border-strong);border-radius:var(--radius);padding:4px 10px;font:inherit;font-size:11px;cursor:pointer}
+.btn-mini:hover{background:var(--accent-soft);border-color:var(--accent)}
+.btn-mini.active{background:var(--accent);border-color:var(--accent);color:#fff}
+#view{flex:1;min-width:0;position:relative;background:#fafcf8;overflow:hidden}
+#plan{width:100%;height:100%;display:block;cursor:grab;user-select:none}
+#plan.dragging{cursor:grabbing}
+.obj:hover{fill-opacity:.95 !important;cursor:pointer}
+.obj.selected{stroke:#ff6f00 !important;stroke-width:2.5 !important}
+.line-obj:hover{stroke-width:4 !important;cursor:pointer}
+.line-obj.selected{stroke:#ff6f00 !important;stroke-width:3.5 !important}
+.point-obj:hover{stroke-width:3 !important;cursor:pointer}
+.point-obj.selected{stroke:#ff6f00 !important;stroke-width:3.5 !important}
+.toolbar{position:absolute;top:16px;right:16px;display:flex;flex-direction:column;gap:4px;z-index:5;border:1px solid var(--border-strong);background:var(--panel);box-shadow:0 2px 6px rgba(15,23,42,.08)}
+.toolbar button{width:34px;height:34px;border:none;border-bottom:1px solid var(--border);background:var(--panel);cursor:pointer;font-size:15px;color:var(--text);font-family:inherit;padding:0}
+.toolbar button:last-child{border-bottom:none}
+.toolbar button:hover{background:var(--accent-soft);color:var(--accent)}
+.popup{position:absolute;z-index:20;background:var(--panel);border:1px solid var(--border-strong);border-top:3px solid var(--accent);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;min-width:260px;max-width:360px;font-size:13px;display:none}
+.popup.visible{display:block}
+.popup h3{margin:0 0 6px;font-size:14px;font-weight:600;padding-right:22px;line-height:1.3}
+.popup .cat{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.popup table{width:100%;border-collapse:collapse;font-size:12.5px}
+.popup th{text-align:left;color:var(--text-muted);font-weight:500;padding:3px 10px 3px 0;vertical-align:top;width:40%}
+.popup td{padding:3px 0;word-break:break-word}
+.popup .note{margin-top:10px;padding:8px 10px;background:#fdf6e3;border-left:3px solid #e5a13a;font-size:11.5px;color:#7a5c00;line-height:1.45}
+.popup .close{position:absolute;top:8px;right:8px;background:transparent;border:none;font-size:18px;color:var(--text-muted);cursor:pointer;padding:2px 7px;font-family:inherit}
+#coords{position:absolute;left:12px;bottom:12px;z-index:6;padding:5px 10px;background:rgba(255,255,255,.92);border:1px solid var(--border-strong);border-radius:var(--radius);font-family:Consolas,"Courier New",monospace;font-size:11px;color:var(--text-muted);pointer-events:none;letter-spacing:.3px;min-width:160px;text-align:center}
+#legend{position:absolute;right:12px;bottom:12px;z-index:6;background:rgba(255,255,255,.95);border:1px solid var(--border-strong);border-radius:var(--radius);box-shadow:0 2px 8px rgba(15,23,42,.12);max-width:230px;font-size:11px;overflow:hidden;transition:max-height .2s}
+#legend-header{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--panel-alt);border-bottom:1px solid var(--border);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);cursor:pointer;user-select:none}
+#legend-toggle{background:transparent;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;padding:0;line-height:1;font-family:inherit}
+#legend-body{padding:8px 10px;max-height:340px;overflow-y:auto}
+#legend.collapsed #legend-body{display:none}
+#legend.collapsed #legend-toggle{transform:rotate(-90deg)}
+.legend-group{margin-bottom:8px}
+.legend-group:last-child{margin-bottom:0}
+.legend-group-title{font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;padding-bottom:3px;border-bottom:1px dashed var(--border)}
+.legend-row{display:flex;align-items:center;gap:7px;padding:2px 0;line-height:1.2}
+.legend-swatch{flex:0 0 auto;width:14px;height:14px;display:flex;align-items:center;justify-content:center}
+.legend-swatch .sw-poly{width:11px;height:11px;border:1px solid rgba(0,0,0,.25);border-radius:1px}
+.legend-swatch .sw-line{width:14px;height:0;border-top-width:2px;border-top-style:solid}
+.legend-swatch .sw-point{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,.25)}
+.legend-swatch .sw-diamond{width:9px;height:9px;transform:rotate(45deg);border:1px solid rgba(0,0,0,.25)}
+.legend-swatch .sw-square{width:9px;height:9px;border:1px solid rgba(0,0,0,.25)}
+.legend-swatch .sw-triangle{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:9px solid #888}
+.legend-row .legend-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+@media (max-width:768px){#legend{max-width:180px;font-size:10px}#legend-body{max-height:220px}#coords{font-size:10px;min-width:130px}}#sidebar-toggle{display:none;position:fixed;top:calc(var(--topbar-h) + 12px);left:12px;z-index:1300;width:42px;height:42px;border-radius:var(--radius);border:1px solid var(--border-strong);background:var(--panel);font-size:18px;cursor:pointer}
+#sidebar-close{display:none;background:transparent;border:none;font-size:22px;color:var(--text-muted);cursor:pointer;padding:0 4px;font-family:inherit}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:2000}
+.modal.visible{display:flex}
+.modal-box{background:#fff;border-radius:var(--radius);padding:22px 24px;width:360px;max-width:90vw;box-shadow:0 12px 44px rgba(0,0,0,.35)}
+.modal-box h3{margin:0 0 16px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--accent)}
+.modal-box label{display:block;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.modal-box input{display:block;width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--border-strong);border-radius:var(--radius);font:inherit;font-size:13px;text-transform:none;color:var(--text)}
+.modal-box input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.modal-err{color:#b71c1c;font-size:12px;margin-bottom:10px;min-height:16px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px}
+@media (max-width:768px){
+#sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;width:88vw;max-width:360px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:6px 0 20px rgba(15,23,42,.2)}
+#sidebar.open{transform:translateX(0)}
+#sidebar-close{display:block}
+#sidebar-toggle{display:flex;align-items:center;justify-content:center}
+.brand-text h1{font-size:12px}.brand-text p{display:none}.topbar-nav .topbar-badge{display:none}
+}
+</style></head><body><div id="app">
+<header class="topbar">
+<div class="brand"><div class="brand-mark">А</div>
+<div class="brand-text"><h1>Ферма «Агроинвест» — интерактивная карта</h1>
+<p>Схема объектов и инженерных сетей · Александровский район</p></div></div>
+<nav class="topbar-nav">
+<span class="topbar-badge">Схема загружена</span>
+<span id="topbar-date">—</span>
+<span style="width:1px;height:18px;background:rgba(255,255,255,.25)"></span>
+<button id="refresh-map-btn" type="button" style="display:none" title="Обновить данные из QGIS">⟳ Обновить</button>
+<span id="topbar-role">Гость</span>
+<button id="auth-btn" type="button">Войти</button>
+</nav>
+</header>
+<div class="workspace">
+<button id="sidebar-toggle">☰</button>
+<aside id="sidebar">
+<div class="sidebar-section"><h3>Поиск по объектам <button id="sidebar-close" style="float:right;margin-top:-2px">×</button></h3>
+<input id="search-input" type="search" placeholder="Код, название, номер…" autocomplete="off">
+<ul id="search-results"></ul></div>
+<div class="sidebar-section grow"><h3>Слои проекта</h3><div id="layer-tree" class="layer-tree"></div></div>
+<footer class="sidebar-footer"><span id="status">Загрузка…</span>
+<button class="btn-mini active" id="labels-toggle">Подписи</button></footer>
+</aside>
+<main id="view">
+<div class="toolbar"><button id="zoom-in">+</button><button id="zoom-out">−</button><button id="zoom-fit">⛶</button></div>
+<svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
+<div class="popup" id="popup"><button class="close" id="popup-close">×</button><div id="popup-body"></div></div>
+<div id="coords">—</div>
+<div id="legend">
+  <div id="legend-header">
+    <span>Легенда</span>
+    <button id="legend-toggle" type="button">▾</button>
+  </div>
+  <div id="legend-body"></div>
+</div>
+</main>
+</div>
+
+<div class="modal" id="login-modal">
+<div class="modal-box">
+<h3>Вход администратора</h3>
+<label>Логин<input id="login-user" type="text" autocomplete="username"></label>
+<label>Пароль<input id="login-pass" type="password" autocomplete="current-password"></label>
+<div class="modal-err" id="login-err"></div>
+<div class="modal-actions">
+<button class="btn-mini" id="login-cancel" type="button">Отмена</button>
+<button class="btn-mini active" id="login-submit" type="button">Войти</button>
+</div></div></div>
+</div>
+<script src="data.js"></script>
+<script>
+const AUTH={login:"admin",password:"agroinvest2026"};
+const PUBLIC_CODES=["01"];
+const ALWAYS_VISIBLE_KEYS=["Сектора"];
+const PLAN_IMAGE = "plan.png";
+const PLAN_X = -410, PLAN_Y = -320, PLAN_W = 1300, PLAN_H = 1300, PLAN_OPACITY = 0.5;
+
+const SECTORA={"type":"FeatureCollection","features":[
+{"type":"Feature","properties":{"fid":1,"code":"С1-С","name":"Северный","group_name":"Сектора"},"geometry":{"type":"MultiPolygon","coordinates":[[[[1400880,458175],[1400880,458521],[1401220,458521],[1401220,458175],[1400880,458175]]]]}},
+{"type":"Feature","properties":{"fid":2,"code":"С2-З","name":"Западный","group_name":"Сектора"},"geometry":{"type":"MultiPolygon","coordinates":[[[[1400700,457934.5],[1400700,458521],[1400880,458521],[1400880,458175],[1400934,458175],[1400934,457934.5],[1400700,457934.5]]]]}},
+{"type":"Feature","properties":{"fid":3,"code":"С3-Ц","name":"Центральный","group_name":"Сектора"},"geometry":{"type":"MultiPolygon","coordinates":[[[[1400934,457934.5],[1401032,457934.5],[1401032,458175],[1400934,458175],[1400934,457934.5]]]]}},
+{"type":"Feature","properties":{"fid":4,"code":"С4-В","name":"Восточный","group_name":"Сектора"},"geometry":{"type":"MultiPolygon","coordinates":[[[[1401032,457934.5],[1401220,457934.5],[1401220,458175],[1401032,458175],[1401032,457934.5]]]]}},
+{"type":"Feature","properties":{"fid":5,"code":"С5-Ю","name":"Южный","group_name":"Сектора"},"geometry":{"type":"MultiPolygon","coordinates":[[[[1400700,457934.5],[1401220,457934.5],[1401220,457735],[1400700,457735],[1400700,457934.5]]]]}}
+]};
+
+// ===== Данные приходят из data.js =====
+// Здесь только раскладка: какому файлу какая группа соответствует,
+// если в самом файле нет поля group_name или sector.
+
+const FILE_TO_GROUP = {
+  "Корпуса__сооружения_и_площадки":               null,
+  "Помещения_и_энергоузел":                       "Служебные",
+  "Лагуны_1_и_2___контуры_прежней_карты":         "Водоёмы",
+  "В___сектора_и_подсектора":                     null,
+  "Вода_и_помещения___проверить_привязку":        "В1-С",
+  "КЛ___колодцы_последнего_проекта":              "Колодцы новый",
+  "КЛ___колодцы_старого_плана":                   "Колодцы старый",
+  "Р1_Р3___резервуары":                           "Резервуары",
+  "Скв1__Скв2__Скв3_нед____скважины":             "Скважины",
+  "Насосная_Станция":                             "Насосная",
+  "Забор___линии":                                "Забор",
+  "Воздушные_участки___ЭЛ_":                      "ВЛ",
+  "Подземные_участки___ЭЛ_":                      "КЛ",
+  "Опоры___ОП___рабочие_номера_":                 "ОП",
+  "НВ___контуры_объектов_по_генплану_2017":       "НВ контуры",
+  "НВ___сооружения_и_подписи":                    "НВ точки",
+  "Новые_места_уточнения___навоз_и_подземные_линии":"НВ точки",
+  "ГАЗ___Газопровод___сектора_и_участки":         "Газ",
+  "СС___Подземная_связь___сектора_и_участки":     "Связь",
+  "КН___Канализация___сектора_и_участки":         "Канализация",
+  "К1__К3__К3_1н___проектные_линии_2024":         "Канализация"
+};
+
+function buildDataFromQGIS(){
+  const out = [];
+  Object.entries(QGIS_DATA).forEach(([key, fc])=>{
+    const features = (fc && fc.features) ? fc.features : [];
+
+    // Приоритет: сначала whitelist (там явное указание группы), потом group_name, потом sector
+    const explicit = FILE_TO_GROUP[key];
+
+    features.forEach(f=>{
+      const p = f.properties || {};
+      let group;
+
+      if(explicit !== null && explicit !== undefined){
+        group = explicit;                                     // для газа/связи/канализации/электро
+      } else if(p.group_name){
+        group = p.group_name;                                 // для корпусов и водоёмов
+      } else if(p.sector){
+        group = p.sector;                                     // для воды (сектор = группа)
+      } else {
+        group = key;                                          // на всякий случай
+      }
+
+      p.group_name = group;
+      out.push(f);
+    });
+  });
+  return { type:"FeatureCollection", features: out };
+}
+
+const DATA = buildDataFromQGIS();
+
+const SUBLAYER_STYLES={
+  "Корпуса":{color:"#2f6fdb",fill:"#c7d8f5"},
+  "Корма и склады":{color:"#c78614",fill:"#f8e2b8"},
+  "Площадки":{color:"#666",fill:"#dedede"},
+  "Водоёмы":{color:"#1a89b3",fill:"#bfe6f3"},
+  "Служебные":{color:"#8d3fb8",fill:"#e5d1f0"},
+  "Галереи":{color:"#c14040",fill:"#f3cece"},
+  "В1-С":{color:"#1565c0",fill:"#1565c0",isLine:true},
+  "В2-З":{color:"#8b5a2b",fill:"#8b5a2b",isLine:true},
+  "В3-Ц":{color:"#008080",fill:"#008080",isLine:true},
+  "В4-В":{color:"#7b1fa2",fill:"#7b1fa2",isLine:true},
+  "В5-Ю":{color:"#b03030",fill:"#b03030",isLine:true},
+  "Колодцы новый":{color:"#6a1b9a",fill:"#ce93d8",isPoint:true,pointShape:"diamond"},
+  "Колодцы старый":{color:"#0277bd",fill:"#b3e5fc",isPoint:true,pointShape:"circle"},
+  "Резервуары":{color:"#e65100",fill:"#ffcc80",isPoint:true,pointShape:"square"},
+  "Скважины":{color:"#00838f",fill:"#80deea",isPoint:true,pointShape:"triangle"},
+  "Насосная":{color:"#ad1457",fill:"#f48fb1",isPoint:true,pointShape:"square"},
+  "Забор":{color:"#8d4a2f",fill:"#8d4a2f",isLine:true},
+  "ВЛ":{color:"#f9a825",fill:"#f9a825",isLine:true,dash:"3 3"},
+  "ОП":{color:"#e65100",fill:"#ffb300",isPoint:true,pointShape:"circle"},
+  "КЛ":{color:"#5d4037",fill:"#5d4037",isLine:true,dash:"8 3 2 3"},
+  "НВ точки":{color:"#4e342e",fill:"#a1887f",isPoint:true,pointShape:"diamond"},
+  "НВ контуры":{color:"#4e342e",fill:"#d7ccc8"},
+  "НВ лагуны":{color:"#6d4c41",fill:"#bcaaa4"},
+  "Газ":{color:"#ffb300",fill:"#ffb300",isLine:true,dash:"5 5"},
+  "Связь":{color:"#7b1fa2",fill:"#7b1fa2",isLine:true,dash:"2 2"},
+  "Канализация":{color:"#455a64",fill:"#455a64",isLine:true,dash:"10 4"}
+};
+const LEGEND_NAMES={
+  "Корпуса":"Корпуса",
+  "Корма и склады":"Корма и склады",
+  "Площадки":"Площадки",
+  "Водоёмы":"Водоёмы",
+  "Служебные":"Служебные",
+  "Галереи":"Галереи",
+  "В1-С":"Вода — Северный",
+  "В2-З":"Вода — Западный",
+  "В3-Ц":"Вода — Центральный",
+  "В4-В":"Вода — Восточный",
+  "В5-Ю":"Вода — Южный",
+  "Колодцы новый":"Колодцы новые",
+  "Колодцы старый":"Колодцы старые",
+  "Резервуары":"Резервуары",
+  "Скважины":"Скважины",
+  "Насосная":"Насосная станция",
+  "Забор":"Забор",
+  "ВЛ":"Воздушные линии",
+  "ОП":"Опоры",
+  "КЛ":"Подземные кабели",
+  "НВ точки":"Навозоудаление — точки",
+  "НВ контуры":"Навозоудаление — контуры",
+  "НВ лагуны":"Навозоудаление — лагуны",
+  "Газ":"Газопровод",
+  "Связь":"Связь",
+  "Канализация":"Канализация"
+};
+
+const MAIN_LAYERS=[
+  {code:"01",title:"Объекты фермы",keys:["Корпуса","Корма и склады","Площадки","Водоёмы","Служебные","Галереи"]},
+  {code:"02",title:"Водоснабжение",keys:["В1-С","В2-З","В3-Ц","В4-В","В5-Ю","Колодцы новый","Колодцы старый","Резервуары","Скважины","Насосная"]},
+  {code:"03",title:"Ограждение",keys:["Забор"]},
+  {code:"04",title:"Электроснабжение",keys:["ВЛ","ОП","КЛ"]},
+  {code:"05",title:"Навозоудаление",keys:["НВ точки","НВ контуры","НВ лагуны"]},
+  {code:"06",title:"Газ",keys:["Газ"]},
+  {code:"07",title:"Связь",keys:["Связь"]},
+  {code:"08",title:"Канализация",keys:["Канализация"]}
+];
+
+const FM={svg:null,layerGroups:{},selected:null,labelsOn:true,labelsVisible:{},
+  baseViewBox:{x:0,y:0,w:1000,h:1000},currentViewBox:{x:0,y:0,w:1000,h:1000}};
+
+window.FM_role=sessionStorage.getItem("fm_role")||"guest";
+function isAdmin(){return window.FM_role==="admin";}
+function visibleLayers(){
+  if(isAdmin()) return MAIN_LAYERS;
+  return MAIN_LAYERS.filter(l=>PUBLIC_CODES.includes(l.code));
+}
+function allowedGroups(){
+  const s=new Set(ALWAYS_VISIBLE_KEYS);
+  visibleLayers().forEach(l=>l.keys.forEach(k=>s.add(k)));
+  return s;
+}
+
+let dataBounds=null;
+function computeBounds(){
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  DATA.features.forEach(f=>{
+    const walk=c=>{
+      if(Array.isArray(c[0])) return c.forEach(walk);
+      if(c[0]<minX)minX=c[0]; if(c[0]>maxX)maxX=c[0];
+      if(c[1]<minY)minY=c[1]; if(c[1]>maxY)maxY=c[1];
+    };
+    walk(f.geometry.coordinates);
+  });
+  dataBounds={minX,minY,maxX,maxY};
+}
+function project(x,y){
+  const b=dataBounds,VW=1000,VH=1000;
+  const dw=b.maxX-b.minX,dh=b.maxY-b.minY;
+  const s=Math.min(VW/dw,VH/dh)*0.9;
+  const ow=dw*s,oh=dh*s;
+  const ox=(VW-ow)/2,oy=(VH-oh)/2;
+  return [ox+(x-b.minX)*s,oy+(b.maxY-y)*s];
+}
+const SVG_NS="http://www.w3.org/2000/svg";
+function el(tag,attrs){const e=document.createElementNS(SVG_NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+function ringPoints(ring){return ring.map(c=>project(c[0],c[1]).join(",")).join(" ");}
+function geomCenter(geom){
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  const walk=c=>{
+    if(Array.isArray(c[0])) return c.forEach(walk);
+    const p=project(c[0],c[1]);
+    if(p[0]<minX)minX=p[0]; if(p[0]>maxX)maxX=p[0];
+    if(p[1]<minY)minY=p[1]; if(p[1]>maxY)maxY=p[1];
+  };
+  walk(geom.coordinates);
+  return [(minX+maxX)/2,(minY+maxY)/2];
+}
+
+function renderPlan(){
+  FM.svg.innerHTML="";
+  FM.layerGroups={};
+    // --- ФОН: градиент + сетка ---
+  const defs=el("defs",{});
+  const grad=el("linearGradient",{id:"bg-grad",x1:"0",y1:"0",x2:"0",y2:"1"});
+  grad.appendChild(el("stop",{offset:"0%","stop-color":"#f5f8f4"}));
+  grad.appendChild(el("stop",{offset:"100%","stop-color":"#e3ebe3"}));
+  defs.appendChild(grad);
+  const pat=el("pattern",{id:"grid-pat",width:50,height:50,patternUnits:"userSpaceOnUse"});
+  pat.appendChild(el("path",{d:"M 50 0 L 0 0 0 50",fill:"none",stroke:"#cfd8cf","stroke-width":"0.6"}));
+  defs.appendChild(pat);
+  const pat2=el("pattern",{id:"grid-pat-bold",width:200,height:200,patternUnits:"userSpaceOnUse"});
+  pat2.appendChild(el("path",{d:"M 200 0 L 0 0 0 200",fill:"none",stroke:"#aab7aa","stroke-width":"1"}));
+  defs.appendChild(pat2);
+  FM.svg.appendChild(defs);
+  FM.svg.appendChild(el("rect",{x:-5000,y:-5000,width:12000,height:12000,fill:"url(#bg-grad)"}));
+  FM.svg.appendChild(el("rect",{x:-5000,y:-5000,width:12000,height:12000,fill:"url(#grid-pat)"}));
+  FM.svg.appendChild(el("rect",{x:-5000,y:-5000,width:12000,height:12000,fill:"url(#grid-pat-bold)"}));
+  const planImg=el("image",{href:PLAN_IMAGE,x:PLAN_X,y:PLAN_Y,width:PLAN_W,height:PLAN_H,preserveAspectRatio:"none",opacity:PLAN_OPACITY});
+  planImg.style.mixBlendMode="multiply";
+  FM.svg.appendChild(planImg);
+  const byGroup={};
+  DATA.features.forEach(f=>{const g=f.properties.group_name||"Прочее";(byGroup[g]=byGroup[g]||[]).push(f);});
+  const ALL_ORDER=["Сектора","НВ лагуны","НВ контуры","Канализация","Связь","Газ","В1-С","В2-З","В3-Ц","В4-В","В5-Ю","КЛ","Забор","ВЛ",
+    "Корпуса","Корма и склады","Площадки","Водоёмы","Служебные","Галереи",
+    "Колодцы новый","Колодцы старый","Резервуары","Скважины","Насосная","НВ точки","ОП"];
+  const allowed=allowedGroups();
+  const order=ALL_ORDER.filter(k=>allowed.has(k));
+  order.forEach(key=>{
+    const features=byGroup[key]||[];
+    if(!features.length) return;
+    const style=SUBLAYER_STYLES[key];
+    if(!style) return;
+    const g=el("g",{class:"layer-group","data-key":key});
+    FM.svg.appendChild(g);
+    FM.layerGroups[key]={g,style,features,visible:true,elements:[]};
+    features.forEach(f=>{
+      const shape=featureToShape(f,style);
+      if(!shape) return;
+      g.appendChild(shape.el);
+      FM.layerGroups[key].elements.push(shape);
+    });
+  });
+  const labelsRoot=el("g",{id:"labels-layer","pointer-events":"none"});
+  FM.svg.appendChild(labelsRoot);
+  labelsRoot.style.display=FM.labelsOn?"block":"none";
+  Object.entries(FM.layerGroups).forEach(([key,lg])=>{
+    const layerLabelsG=el("g",{"data-labels-for":key});
+    labelsRoot.appendChild(layerLabelsG);
+    lg.labelsG=layerLabelsG;
+    const s=lg.style;
+    const isSector=(key==="Сектора");
+    lg.elements.forEach(({feature,labelPos})=>{
+      if(!labelPos) return;
+      const p=feature.properties;
+      let txt="";
+      if(isSector) txt=p.name||p.code||"";
+      else if(s.isLine) txt=p.code||p.name||"";
+      else if(s.isPoint) txt=p.code||p.label||p.id||"";
+      else txt=p.label||p.code||"";
+      if(!txt) return;
+      const isLine=!!s.isLine,isPoint=!!s.isPoint;
+      const text=el("text",{x:labelPos[0],y:labelPos[1],
+        "text-anchor":"middle","dominant-baseline":"middle",
+        "font-family":"system-ui, sans-serif",
+        "font-size":isSector?"22":(isLine?"7":(isPoint?"8":"10")),
+        "fill":isSector?"#455a64":s.color,
+        "font-weight":isSector?"700":(isLine?"500":"600"),
+        "font-style":isLine?"italic":"normal",
+        "opacity":isSector?"0.5":"1",
+        "letter-spacing":isSector?"2":"0",
+        "paint-order":"stroke","stroke":"#fff",
+        "stroke-width":isSector?"4":(isLine?"2":"2.5"),
+        "stroke-linejoin":"round"});
+      text.textContent=txt;
+      layerLabelsG.appendChild(text);
+    });
+    const visible=FM.labelsVisible[key]!==false;
+    layerLabelsG.style.display=(FM.labelsOn&&visible)?"":"none";
+  });
+}
+
+function featureToShape(feature,style){
+  const geom=feature.geometry;
+  let shapeEl=null,labelPos=null;
+  const isSector=feature.properties.group_name==="Сектора";
+  if(geom.type==="Polygon"||geom.type==="MultiPolygon"){
+    const polys=geom.type==="Polygon"?[geom.coordinates]:geom.coordinates;
+    const g=el("g",{});
+    polys.forEach(rings=>{
+      const outer=rings[0];
+      const poly=el("polygon",{points:ringPoints(outer),fill:style.fill,
+        "fill-opacity":isSector?0.14:0.7,stroke:style.color,
+        "stroke-width":isSector?2:1.5,"stroke-opacity":isSector?0.55:1,
+        "stroke-linejoin":"round",class:"obj","vector-effect":"non-scaling-stroke"});
+      poly.style.cursor="pointer";
+      poly.addEventListener("click",ev=>{ev.stopPropagation();showPopup(feature,ev,poly);});
+      g.appendChild(poly);
+    });
+    shapeEl=g; labelPos=geomCenter(geom);
+  } else if(geom.type==="LineString"){
+    const pts=geom.coordinates.map(c=>project(c[0],c[1]).join(",")).join(" ");
+    const attrs={points:pts,fill:"none",stroke:style.color,"stroke-width":2,
+      "stroke-linecap":"round","stroke-linejoin":"round",
+      class:"obj line-obj","vector-effect":"non-scaling-stroke"};
+    if(style.groupKey==="Забор") attrs["stroke-dasharray"]="6 4";
+    else if(style.dash) attrs["stroke-dasharray"]=style.dash;
+    shapeEl=el("polyline",attrs);
+    const coords=geom.coordinates;
+    const mid=coords[Math.floor(coords.length/2)];
+    labelPos=project(mid[0],mid[1]);
+    shapeEl.style.cursor="pointer";
+    shapeEl.addEventListener("click",ev=>{ev.stopPropagation();showPopup(feature,ev,shapeEl);});
+  } else if(geom.type==="Point"){
+    const p=project(geom.coordinates[0],geom.coordinates[1]);
+    const shape=style.pointShape||"circle";
+    if(shape==="diamond"){const r=5;shapeEl=el("polygon",{points:`${p[0]},${p[1]-r} ${p[0]+r},${p[1]} ${p[0]},${p[1]+r} ${p[0]-r},${p[1]}`,fill:style.fill,stroke:style.color,"stroke-width":1.5,class:"obj point-obj","vector-effect":"non-scaling-stroke"});}
+    else if(shape==="square"){const r=5;shapeEl=el("rect",{x:p[0]-r,y:p[1]-r,width:r*2,height:r*2,fill:style.fill,stroke:style.color,"stroke-width":1.5,class:"obj point-obj","vector-effect":"non-scaling-stroke"});}
+    else if(shape==="triangle"){const r=6;shapeEl=el("polygon",{points:`${p[0]},${p[1]-r} ${p[0]+r},${p[1]+r*0.8} ${p[0]-r},${p[1]+r*0.8}`,fill:style.fill,stroke:style.color,"stroke-width":1.5,class:"obj point-obj","vector-effect":"non-scaling-stroke"});}
+    else {shapeEl=el("circle",{cx:p[0],cy:p[1],r:4,fill:style.fill,stroke:style.color,"stroke-width":1.5,class:"obj point-obj","vector-effect":"non-scaling-stroke"});}
+    labelPos=[p[0],p[1]-8];
+    shapeEl.style.cursor="pointer";
+    shapeEl.addEventListener("click",ev=>{ev.stopPropagation();showPopup(feature,ev,shapeEl);});
+  }
+  if(!shapeEl) return null;
+  return {el:shapeEl,feature,labelPos};
+}
+
+function renderTree(){
+  const host=document.getElementById("layer-tree");
+  host.innerHTML="";
+  visibleLayers().forEach(layer=>host.appendChild(renderNode(layer)));
+}
+function renderNode(layer){
+  const wrap=document.createElement("div");
+  wrap.className="node";
+  const head=document.createElement("div");
+  head.className="node-head";
+  const cb=document.createElement("input");
+  cb.type="checkbox";cb.className="cb";cb.checked=true;
+  if(!layer.keys.length) cb.disabled=true;
+  head.appendChild(cb);
+  const sw=document.createElement("span");
+  sw.className="swatch";
+  if(layer.keys.length){
+    const firstStyle=SUBLAYER_STYLES[layer.keys[0]];
+    sw.style.background=firstStyle.fill;
+    sw.style.borderColor=firstStyle.color;
+  } else {sw.style.background="#e0e0e0";sw.style.borderColor="#bdbdbd";}
+  head.appendChild(sw);
+  const name=document.createElement("span");
+  name.className="name";
+  name.textContent=layer.code+" — "+layer.title;
+  head.appendChild(name);
+  const cnt=document.createElement("span");
+  cnt.className="count";
+  if(!layer.keys.length){cnt.textContent="—";}
+  else {let t=0;layer.keys.forEach(k=>{t+=DATA.features.filter(f=>f.properties.group_name===k).length;});cnt.textContent=t;}
+  head.appendChild(cnt);
+  const lt=document.createElement("button");
+  lt.type="button";lt.className="label-toggle";lt.title="Подписи слоя";lt.textContent="Aa";
+  if(!layer.keys.length){lt.style.display="none";}
+  else {
+    if(allLabelsOff(layer)) lt.classList.add("off");
+    lt.addEventListener("click",e=>{
+      e.preventDefault();e.stopPropagation();
+      const off=allLabelsOff(layer);
+      setLabelsRecursive(layer,off);
+      refreshAllLabelButtons();
+    });
+  }
+  head.appendChild(lt);
+  cb.addEventListener("change",()=>toggleLayer(layer,cb.checked));
+  wrap.appendChild(head);
+  return wrap;
+}
+function toggleLayer(layer,on){
+  layer.keys.forEach(k=>{
+    const lg=FM.layerGroups[k];
+    if(lg){lg.g.style.display=on?"":"none";lg.visible=on;}
+  });
+}
+function setLabelsRecursive(layer,visible){
+  layer.keys.forEach(k=>{
+    FM.labelsVisible[k]=visible;
+    const lg=FM.layerGroups[k];
+    if(lg&&lg.labelsG) lg.labelsG.style.display=(FM.labelsOn&&visible)?"":"none";
+  });
+}
+function allLabelsOff(layer){
+  if(!layer.keys.length) return true;
+  return layer.keys.every(k=>FM.labelsVisible[k]===false);
+}
+function refreshAllLabelButtons(){
+  const nodes=document.querySelectorAll("#layer-tree > .node");
+  const visible=visibleLayers();
+  nodes.forEach((nodeEl,idx)=>{
+    const btn=nodeEl.querySelector(".label-toggle");
+    if(!btn||btn.style.display==="none") return;
+    const layer=visible[idx];
+    if(!layer) return;
+    btn.classList.toggle("off",allLabelsOff(layer));
+  });
+}
+
+function showPopup(feature,ev,shapeEl){
+  if(FM.selected){
+    if(FM.selected.tagName==="g") FM.selected.querySelectorAll(".selected").forEach(e=>e.classList.remove("selected"));
+    else FM.selected.classList.remove("selected");
+  }
+  if(shapeEl.tagName==="g") FM.selected=shapeEl;
+  else {shapeEl.classList.add("selected");FM.selected=shapeEl;}
+  const p=feature.properties;
+  const title=p.name||p.label||p.code||p.id||("Объект "+p.fid);
+  const rows=[];
+  if(p.code&&p.code!==title) rows.push(["Код",p.code]);
+  if(p.label&&p.label!==title) rows.push(["Подпись",p.label]);
+  if(p.id&&p.id!==title) rows.push(["ID",p.id]);
+  if(p.old_label) rows.push(["Старый код",p.old_label]);
+  if(p.old_code) rows.push(["Старый код",p.old_code]);
+  if(p.kind) rows.push(["Тип",p.kind]);
+  if(p.method) rows.push(["Способ",p.method]);
+  if(p.voltage) rows.push(["Напряжение",p.voltage]);
+  if(p.sector) rows.push(["Сектор",p.sector]);
+  if(p.project_position) rows.push(["Позиция",p.project_position]);
+  if(p.old_route) rows.push(["Старый маршрут",p.old_route]);
+  if(p.length_m && p.length_m>0) rows.push(["Длина",Math.round(p.length_m*10)/10+" м"]);
+  if(p.year) rows.push(["Год",p.year]);
+  if(p.fid) rows.push(["FID",p.fid]);
+  const table=rows.length?'<table>'+rows.map(r=>"<tr><th>"+esc(r[0])+"</th><td>"+esc(r[1])+"</td></tr>").join("")+'</table>':'';
+  const html='<h3>'+esc(title)+'</h3>'+
+    '<div class="cat">'+esc(p.group_name||"")+'</div>'+table+
+    (p.note?'<div class="note">'+esc(p.note)+'</div>':'')+
+    (p.status?'<div class="note">'+esc(p.status)+'</div>':'');
+  const popup=document.getElementById("popup");
+  document.getElementById("popup-body").innerHTML=html;
+  popup.classList.add("visible");
+  const view=document.getElementById("view").getBoundingClientRect();
+  popup.style.left=Math.max(8,Math.min(ev.clientX-view.left+12,view.width-360))+"px";
+  popup.style.top=Math.max(8,Math.min(ev.clientY-view.top+12,view.height-260))+"px";
+}
+document.getElementById("popup-close").addEventListener("click",()=>{
+  document.getElementById("popup").classList.remove("visible");
+  if(FM.selected){FM.selected.classList.remove("selected");FM.selected=null;}
+});
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+
+function setupPanZoom(){
+  const svg=FM.svg;
+  let dragging=false,startPoint=null,startVB=null;
+  function gp(ev){const r=svg.getBoundingClientRect();return{x:ev.clientX-r.left,y:ev.clientY-r.top};}
+  svg.addEventListener("mousedown",e=>{
+    if(e.button!==0) return;
+    if(e.target.classList&&(e.target.classList.contains("obj")||e.target.closest(".obj"))) return;
+    dragging=true;svg.classList.add("dragging");
+    startPoint=gp(e);startVB={...FM.currentViewBox};
+    e.preventDefault();
+  });
+  window.addEventListener("mousemove",e=>{
+    if(!dragging) return;
+    const p=gp(e);
+    FM.currentViewBox.x=startVB.x-(p.x-startPoint.x)/svg.clientWidth*startVB.w;
+    FM.currentViewBox.y=startVB.y-(p.y-startPoint.y)/svg.clientHeight*startVB.h;
+    applyViewBox();
+  });
+  window.addEventListener("mouseup",()=>{dragging=false;svg.classList.remove("dragging");});
+  svg.addEventListener("wheel",e=>{
+    e.preventDefault();
+    const p=gp(e);
+    const cx=p.x/svg.clientWidth,cy=p.y/svg.clientHeight;
+    const v=FM.currentViewBox;
+    const px=v.x+cx*v.w,py=v.y+cy*v.h;
+    const factor=e.deltaY<0?0.85:1/0.85;
+    const nw=v.w*factor,nh=v.h*factor;
+    FM.currentViewBox={x:px-cx*nw,y:py-cy*nh,w:nw,h:nh};
+    applyViewBox();
+  },{passive:false});
+}
+function applyViewBox(){const v=FM.currentViewBox;FM.svg.setAttribute("viewBox",`${v.x} ${v.y} ${v.w} ${v.h}`);}
+function zoomBy(f){const v=FM.currentViewBox;const cx=v.x+v.w/2,cy=v.y+v.h/2;const nw=v.w*f,nh=v.h*f;FM.currentViewBox={x:cx-nw/2,y:cy-nh/2,w:nw,h:nh};applyViewBox();}
+function zoomFit(){FM.currentViewBox={...FM.baseViewBox};applyViewBox();}
+
+function renderLegend(){
+  const body=document.getElementById("legend-body");
+  if(!body) return;
+  body.innerHTML="";
+  const visible=visibleLayers();
+  visible.forEach(layer=>{
+    if(!layer.keys.length) return;
+    const group=document.createElement("div");
+    group.className="legend-group";
+    const title=document.createElement("div");
+    title.className="legend-group-title";
+    title.textContent=layer.code+" — "+layer.title;
+    group.appendChild(title);
+    layer.keys.forEach(key=>{
+      const style=SUBLAYER_STYLES[key];
+      if(!style) return;
+      const row=document.createElement("div");
+      row.className="legend-row";
+      const sw=document.createElement("span");
+      sw.className="legend-swatch";
+      let swInner;
+      if(style.isPoint){
+        swInner=document.createElement("span");
+        swInner.className="sw-"+(style.pointShape||"point");
+        swInner.style.background=style.fill;
+        swInner.style.borderColor=style.color;
+      } else if(style.isLine){
+        swInner=document.createElement("span");
+        swInner.className="sw-line";
+        swInner.style.borderTopColor=style.color;
+        swInner.style.borderTopStyle=style.dash?"dashed":"solid";
+      } else {
+        swInner=document.createElement("span");
+        swInner.className="sw-poly";
+        swInner.style.background=style.fill;
+        swInner.style.borderColor=style.color;
+      }
+      sw.appendChild(swInner);
+      row.appendChild(sw);
+      const nm=document.createElement("span");
+      nm.className="legend-name";
+      nm.textContent=LEGEND_NAMES[key]||key;
+      row.appendChild(nm);
+      group.appendChild(row);
+    });
+    body.appendChild(group);
+  });
+}
+
+function setupLegendToggle(){
+  const legend=document.getElementById("legend");
+  const header=document.getElementById("legend-header");
+  if(!legend||!header) return;
+  header.addEventListener("click",()=>legend.classList.toggle("collapsed"));
+}
+
+function svgToReal(svgX,svgY){
+  const b=dataBounds,VW=1000,VH=1000;
+  const dw=b.maxX-b.minX,dh=b.maxY-b.minY;
+  const s=Math.min(VW/dw,VH/dh)*0.9;
+  const ow=dw*s,oh=dh*s;
+  const ox=(VW-ow)/2,oy=(VH-oh)/2;
+  return [b.minX+(svgX-ox)/s, b.maxY-(svgY-oy)/s];
+}
+function screenToSvg(clientX,clientY){
+  const rect=FM.svg.getBoundingClientRect();
+  const v=FM.currentViewBox;
+  return [
+    v.x+(clientX-rect.left)/rect.width*v.w,
+    v.y+(clientY-rect.top)/rect.height*v.h
+  ];
+}
+function setupCoords(){
+  const el=document.getElementById("coords");
+  if(!el||!FM.svg) return;
+  FM.svg.addEventListener("mousemove",e=>{
+    const [sx,sy]=screenToSvg(e.clientX,e.clientY);
+    const [rx,ry]=svgToReal(sx,sy);
+    el.textContent="X: "+rx.toFixed(1)+"   Y: "+ry.toFixed(1);
+  });
+  FM.svg.addEventListener("mouseleave",()=>{
+    el.textContent="—";
+  });
+}
+
+function setupSearch(){
+  const input=document.getElementById("search-input");
+  const results=document.getElementById("search-results");
+  input.addEventListener("input",()=>{
+    const q=input.value.trim().toLowerCase();
+    results.innerHTML="";
+    if(q.length<2) return;
+    const found=[];
+    const allowed=allowedGroups();
+    DATA.features.forEach(f=>{
+      const p=f.properties;
+      if(!allowed.has(p.group_name)) return;
+      const hay=[p.name,p.label,p.code,p.id,p.old_label,p.old_code,p.old_route,p.sector,p.project_position]
+        .filter(Boolean).join(" ").toLowerCase();
+      if(hay.indexOf(q)!==-1) found.push(f);
+    });
+    if(!found.length){
+      const li=document.createElement("li");
+      li.textContent="Ничего не найдено";
+      li.style.color="#6b7684";li.style.cursor="default";
+      results.appendChild(li);return;
+    }
+    found.slice(0,25).forEach(f=>{
+      const p=f.properties;
+      const li=document.createElement("li");
+      li.innerHTML=esc(p.name||p.label||p.code||p.id||("Объект "+p.fid))+
+        '<span class="res-layer">'+esc(p.group_name||"")+'</span>';
+      li.addEventListener("click",()=>focusFeature(f));
+      results.appendChild(li);
+    });
+  });
+}
+function focusFeature(feature){
+  const key=feature.properties.group_name;
+  const lg=FM.layerGroups[key];
+  if(!lg) return;
+  if(!lg.visible){lg.g.style.display="";lg.visible=true;}
+  const shape=lg.elements.find(e=>e.feature===feature);
+  if(!shape) return;
+  if(FM.selected){
+    if(FM.selected.tagName==="g") FM.selected.querySelectorAll(".selected").forEach(e=>e.classList.remove("selected"));
+    else FM.selected.classList.remove("selected");
+  }
+  if(shape.el.tagName!=="g") shape.el.classList.add("selected");
+  FM.selected=shape.el;
+  const bbox=shape.el.getBBox();
+  const pad=Math.max(bbox.width,bbox.height)*3+20;
+  const cx=bbox.x+bbox.width/2,cy=bbox.y+bbox.height/2;
+  FM.currentViewBox={x:cx-pad,y:cy-pad,w:pad*2,h:pad*2};
+  applyViewBox();
+  const view=document.getElementById("view").getBoundingClientRect();
+  showPopup(feature,{clientX:view.left+view.width/2, clientY:view.top+80}, shape.el);
+  document.getElementById("search-results").innerHTML="";
+  document.getElementById("search-input").value=
+    feature.properties.name||feature.properties.label||feature.properties.code||feature.properties.id||"";
+}
+
+function updateAuthUI(){
+  const roleEl=document.getElementById("topbar-role");
+  const btn=document.getElementById("auth-btn");
+  const refreshBtn=document.getElementById("refresh-map-btn");
+  if(isAdmin()){
+    roleEl.textContent="Администратор";
+    btn.textContent="Выйти";
+    btn.onclick=logout;
+    refreshBtn.style.display="inline-block";
+  } else {
+    roleEl.textContent="Гость";
+    btn.textContent="Войти";
+    btn.onclick=openLogin;
+    refreshBtn.style.display="none";
+  }
+}
+
+/* ==== Кнопка обновления схемы ==== */
+const UPDATE_SERVER = "http://localhost:8765";
+
+async function checkUpdateServer(){
+  try{
+    const r = await fetch(UPDATE_SERVER + "/ping", {cache:"no-store"});
+    return r.ok;
+  } catch(e){
+    return false;
+  }
+}
+
+async function refreshMapFromQGIS(){
+  const btn = document.getElementById("refresh-map-btn");
+  if(btn.disabled) return;
+
+  const ok = await checkUpdateServer();
+  if(!ok){
+    alert(
+      "Сервер обновления не запущен.\n\n" +
+      "Откройте папку farm-map и запустите файл server.py\n" +
+      "(двойной клик или командой python server.py).\n" +
+      "Окно не закрывайте — оно должно работать, пока вы правите карту."
+    );
+    return;
+  }
+
+  if(!confirm("Выгрузить свежие данные из QGIS и обновить карту?\n\nЭто может занять 5–30 секунд.")) return;
+
+  btn.disabled = true;
+  btn.textContent = "⏳ Обновление…";
+
+  try{
+    const r = await fetch(UPDATE_SERVER + "/update", {method:"POST"});
+    const data = await r.json();
+
+    if(!r.ok || !data.ok){
+      throw new Error((data && data.error) || ("HTTP " + r.status));
+    }
+
+    btn.textContent = "✓ Готово";
+    setTimeout(()=>location.reload(), 700);
+  } catch(e){
+    btn.disabled = false;
+    btn.textContent = "⟳ Обновить";
+    alert("Не удалось обновить:\n\n" + e.message);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const btn = document.getElementById("refresh-map-btn");
+  if(btn) btn.addEventListener("click", refreshMapFromQGIS);
+});
+function openLogin(){
+  const m=document.getElementById("login-modal");
+  document.getElementById("login-user").value="";
+  document.getElementById("login-pass").value="";
+  document.getElementById("login-err").textContent="";
+  m.classList.add("visible");
+  setTimeout(()=>document.getElementById("login-user").focus(),50);
+}
+function closeLogin(){document.getElementById("login-modal").classList.remove("visible");}
+function tryLogin(){
+  const u=document.getElementById("login-user").value.trim();
+  const p=document.getElementById("login-pass").value;
+  if(u===AUTH.login && p===AUTH.password){
+    window.FM_role="admin";
+    sessionStorage.setItem("fm_role","admin");
+    closeLogin();
+    rebuildAll();
+  } else {document.getElementById("login-err").textContent="Неверный логин или пароль";}
+}
+function logout(){
+  window.FM_role="guest";
+  sessionStorage.removeItem("fm_role");
+  rebuildAll();
+}
+function rebuildAll(){
+  FM.layerGroups={};
+  FM.labelsVisible={};
+  FM.selected=null;
+  renderPlan();
+  renderTree();
+  renderLegend();
+  updateAuthUI();
+  updateStatus();
+}
+function updateStatus(){
+  const n=visibleLayers().length;
+  document.getElementById("status").textContent="Объектов: "+DATA.features.length+" · слоёв: "+n;
+}
+
+document.getElementById("login-cancel").addEventListener("click",closeLogin);
+document.getElementById("login-submit").addEventListener("click",tryLogin);
+document.getElementById("login-user").addEventListener("keydown",e=>{if(e.key==="Enter") document.getElementById("login-pass").focus();});
+document.getElementById("login-pass").addEventListener("keydown",e=>{if(e.key==="Enter") tryLogin();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape") closeLogin();});
+
+try{
+  computeBounds();
+  FM.svg=document.getElementById("plan");
+  FM.baseViewBox={x:0,y:0,w:1000,h:1000};
+  FM.currentViewBox={...FM.baseViewBox};
+  renderPlan();
+  renderTree();
+  renderLegend();
+  setupPanZoom();
+  setupSearch();
+  setupLegendToggle();
+  setupCoords();
+  applyViewBox();
+  document.getElementById("zoom-in").addEventListener("click",()=>zoomBy(0.7));
+  document.getElementById("zoom-out").addEventListener("click",()=>zoomBy(1/0.7));
+  document.getElementById("zoom-fit").addEventListener("click",zoomFit);
+  document.getElementById("labels-toggle").addEventListener("click",function(){
+    FM.labelsOn=!FM.labelsOn;
+    this.classList.toggle("active",FM.labelsOn);
+    const l=document.getElementById("labels-layer");
+    if(l) l.style.display=FM.labelsOn?"block":"none";
+    Object.entries(FM.layerGroups).forEach(([key,lg])=>{
+      if(lg.labelsG) lg.labelsG.style.display=(FM.labelsOn&&FM.labelsVisible[key]!==false)?"":"none";
+    });
+  });
+  document.getElementById("sidebar-toggle").addEventListener("click",()=>{
+    document.getElementById("sidebar").classList.toggle("open");
+  });
+  document.getElementById("sidebar-close").addEventListener("click",()=>{
+    document.getElementById("sidebar").classList.remove("open");
+  });
+  document.getElementById("topbar-date").textContent=
+    new Date().toLocaleDateString("ru-RU",{day:"2-digit",month:"long",year:"numeric"});
+  updateAuthUI();
+  updateStatus();
+} catch(err){
+  console.error(err);
+  document.getElementById("status").textContent="Ошибка: "+err.message;
+}
+</script></body></html>
