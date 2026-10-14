@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "Масштаб___100_м_по_координатам_плана",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"kind":"scale"},"geometry":{"type":"LineString","coordinates":[[1401235.0,457817.0],[1401335.0,457817.0]]}},
+{"type":"Feature","properties":{"fid":2,"kind":"tick"},"geometry":{"type":"LineString","coordinates":[[1401235.0,457815.0],[1401235.0,457820.0]]}},
+{"type":"Feature","properties":{"fid":3,"kind":"tick"},"geometry":{"type":"LineString","coordinates":[[1401285.0,457815.0],[1401285.0,457820.0]]}},
+{"type":"Feature","properties":{"fid":4,"kind":"tick"},"geometry":{"type":"LineString","coordinates":[[1401335.0,457815.0],[1401335.0,457820.0]]}}
+]
+}

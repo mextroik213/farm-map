@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "Названия_общих_секторов",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"name":"С1-С · Северный"},"geometry":{"type":"Point","coordinates":[1401080.0,458420.0]}},
+{"type":"Feature","properties":{"fid":2,"name":"С2-З · Западный"},"geometry":{"type":"Point","coordinates":[1400800.0,458430.0]}},
+{"type":"Feature","properties":{"fid":3,"name":"С3-Ц"},"geometry":{"type":"Point","coordinates":[1400965.0,458039.0]}},
+{"type":"Feature","properties":{"fid":4,"name":"С4-В"},"geometry":{"type":"Point","coordinates":[1401180.0,458112.0]}},
+{"type":"Feature","properties":{"fid":5,"name":"С5-Ю · Южный"},"geometry":{"type":"Point","coordinates":[1400820.0,457807.0]}}
+]
+}

@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"name": "Подписи_масштаба",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"label":"0"},"geometry":{"type":"Point","coordinates":[1401235.0,457825.0]}},
+{"type":"Feature","properties":{"fid":2,"label":"50"},"geometry":{"type":"Point","coordinates":[1401285.0,457825.0]}},
+{"type":"Feature","properties":{"fid":3,"label":"100 м"},"geometry":{"type":"Point","coordinates":[1401335.0,457825.0]}}
+]
+}

@@ -1,0 +1,27 @@
+{
+"type": "FeatureCollection",
+"name": "Легенда___подписи",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"label":"УСЛОВНЫЕ ОБОЗНАЧЕНИЯ","kind":"title"},"geometry":{"type":"Point","coordinates":[1401270.0,458325.0]}},
+{"type":"Feature","properties":{"fid":2,"label":"В1-С … В5-Ю — сектора водопровода","kind":"water"},"geometry":{"type":"Point","coordinates":[1401270.0,458306.0]}},
+{"type":"Feature","properties":{"fid":3,"label":"Скв1, Скв2 — скважины","kind":"well"},"geometry":{"type":"Point","coordinates":[1401270.0,458287.0]}},
+{"type":"Feature","properties":{"fid":4,"label":"Скв3 нед. — недействительна","kind":"inactive"},"geometry":{"type":"Point","coordinates":[1401270.0,458268.0]}},
+{"type":"Feature","properties":{"fid":5,"label":"Р1–Р3 — резервуары","kind":"reservoir"},"geometry":{"type":"Point","coordinates":[1401270.0,458249.0]}},
+{"type":"Feature","properties":{"fid":6,"label":"КЛ — колодцы старого плана","kind":"old"},"geometry":{"type":"Point","coordinates":[1401270.0,458230.0]}},
+{"type":"Feature","properties":{"fid":7,"label":"КЛ — колодцы нового проекта","kind":"new"},"geometry":{"type":"Point","coordinates":[1401270.0,458211.0]}},
+{"type":"Feature","properties":{"fid":8,"label":"ПГ — пожарный гидрант","kind":"text"},"geometry":{"type":"Point","coordinates":[1401270.0,458192.0]}},
+{"type":"Feature","properties":{"fid":9,"label":"Серый фон — план фермы","kind":"base"},"geometry":{"type":"Point","coordinates":[1401270.0,458173.0]}},
+{"type":"Feature","properties":{"fid":10,"label":"В1-С — Северный","kind":"sector"},"geometry":{"type":"Point","coordinates":[1401270.0,458145.0]}},
+{"type":"Feature","properties":{"fid":11,"label":"В2-З — Западный","kind":"sector"},"geometry":{"type":"Point","coordinates":[1401270.0,458130.0]}},
+{"type":"Feature","properties":{"fid":12,"label":"В3-Ц — Центральный","kind":"sector"},"geometry":{"type":"Point","coordinates":[1401270.0,458115.0]}},
+{"type":"Feature","properties":{"fid":13,"label":"В4-В — Восточный","kind":"sector"},"geometry":{"type":"Point","coordinates":[1401270.0,458100.0]}},
+{"type":"Feature","properties":{"fid":14,"label":"В5-Ю — Южный","kind":"sector"},"geometry":{"type":"Point","coordinates":[1401270.0,458085.0]}},
+{"type":"Feature","properties":{"fid":15,"label":"В4.2-В — подсектор / участок","kind":"note"},"geometry":{"type":"Point","coordinates":[1401270.0,458055.0]}},
+{"type":"Feature","properties":{"fid":16,"label":"КЛ4.2.1-В — колодец","kind":"note"},"geometry":{"type":"Point","coordinates":[1401270.0,458040.0]}},
+{"type":"Feature","properties":{"fid":17,"label":"Север ↑; юг ↓; запад ←; восток →","kind":"note"},"geometry":{"type":"Point","coordinates":[1401270.0,458025.0]}},
+{"type":"Feature","properties":{"fid":18,"label":"Деление территориальное","kind":"note"},"geometry":{"type":"Point","coordinates":[1401270.0,458010.0]}},
+{"type":"Feature","properties":{"fid":19,"label":"Границы не означают отключение","kind":"note"},"geometry":{"type":"Point","coordinates":[1401270.0,457995.0]}}
+]
+}

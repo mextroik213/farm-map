@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"name": "Р1_Р3___резервуары",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"id":"R1","label":"Р1 — резервуар","volume_m3":null,"purpose":"Резервуар воды по указанию пользователя; исходная подпись емк.","status":"Объект исходной схемы; объём и режим работы не подтверждены","source_label_handle":"143F7","position_source":"Точка вставки исходной подписи емк.; контур сооружения оставлен в фоновой основе","label_x":null,"label_y":null},"geometry":{"type":"Point","coordinates":[1400899.43325302,458200.06367119]}},
+{"type":"Feature","properties":{"fid":2,"id":"R2","label":"Р2 — резервуар","volume_m3":null,"purpose":"Резервуар воды по указанию пользователя; исходная подпись емк.","status":"Объект исходной схемы; объём и режим работы не подтверждены","source_label_handle":"143F6","position_source":"Точка вставки исходной подписи емк.; контур сооружения оставлен в фоновой основе","label_x":null,"label_y":null},"geometry":{"type":"Point","coordinates":[1400912.12053632,458202.76031469]}},
+{"type":"Feature","properties":{"fid":3,"id":"R3","label":"Р3 — резервуар","volume_m3":null,"purpose":"Резервуар воды по указанию пользователя; исходная подпись емк.","status":"Объект исходной схемы; объём и режим работы не подтверждены","source_label_handle":"143F5","position_source":"Точка вставки исходной подписи емк.; контур сооружения оставлен в фоновой основе","label_x":null,"label_y":null},"geometry":{"type":"Point","coordinates":[1400924.40530402,458201.16941473]}}
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Подземная_связь___исходные_линии_CAD",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"code":"СС-CAD-17B1A","name":"Подземная связь","sector":"С1-С","old_code":"17B1A","length_m":30.497140529168092,"status":"Топосъёмка 08.2023; современное состояние не подтверждено","source":"Документация/Топосъёмка_2023/farm_export.dxf","source_handle":"17B1A","note":"Назначение по описанию типа линии LI5-SV_PO"},"geometry":{"type":"LineString","coordinates":[[1401140.29142767,458180.6969548],[1401170.77453723,458179.77196196]]}}
+]
+}

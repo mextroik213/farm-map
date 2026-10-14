@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "Масштаб_и_север",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"name":"0"},"geometry":{"type":"Point","coordinates":[1401110.0,457763.0]}},
+{"type":"Feature","properties":{"fid":2,"name":"50"},"geometry":{"type":"Point","coordinates":[1401160.0,457763.0]}},
+{"type":"Feature","properties":{"fid":3,"name":"100 м"},"geometry":{"type":"Point","coordinates":[1401210.0,457763.0]}},
+{"type":"Feature","properties":{"fid":4,"name":"С ↑"},"geometry":{"type":"Point","coordinates":[1401218.0,458480.0]}}
+]
+}

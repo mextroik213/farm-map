@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "Масштаб_100_м",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"name":"100 м"},"geometry":{"type":"LineString","coordinates":[[1401110.0,457757.0],[1401210.0,457757.0]]}},
+{"type":"Feature","properties":{"fid":2,"name":""},"geometry":{"type":"LineString","coordinates":[[1401110.0,457755.0],[1401110.0,457759.0]]}},
+{"type":"Feature","properties":{"fid":3,"name":""},"geometry":{"type":"LineString","coordinates":[[1401160.0,457755.0],[1401160.0,457759.0]]}},
+{"type":"Feature","properties":{"fid":4,"name":""},"geometry":{"type":"LineString","coordinates":[[1401210.0,457755.0],[1401210.0,457759.0]]}}
+]
+}

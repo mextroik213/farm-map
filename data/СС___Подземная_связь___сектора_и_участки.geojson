@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "СС___Подземная_связь___сектора_и_участки",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"code":"СС1-С-01","name":"Подземная связь","sector":"С1-С","old_code":"17B1A","length_m":30.497,"status":"Топосъёмка 08.2023; современное состояние не подтверждено","source":"Документация/Топосъёмка_2023/farm_export.dxf","source_handle":"17B1A","note":"Назначение по исходному CAD-типу. Текущее состояние уточняется."},"geometry":{"type":"LineString","coordinates":[[1401140.29142767,458180.6969548],[1401170.77453723,458179.77196196]]}}
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Газопровод___исходные_линии_CAD",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"code":"ГАЗ-CAD-17B09","name":"Газопровод","sector":"С5-Ю","old_code":"17B09","length_m":41.325338447903164,"status":"Топосъёмка 08.2023; современное состояние не подтверждено","source":"Документация/Топосъёмка_2023/farm_export.dxf","source_handle":"17B09","note":"Назначение по описанию типа линии LI5-GA_PO_M"},"geometry":{"type":"LineString","coordinates":[[1400783.57572364,457781.89587377],[1400784.2853899,457781.18707571],[1400792.63521512,457820.63540798]]}}
+]
+}

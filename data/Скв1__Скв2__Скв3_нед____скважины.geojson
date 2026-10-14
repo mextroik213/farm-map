@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"name": "Скв1__Скв2__Скв3_нед____скважины",
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"id":"S1","label":"Скв1","number":null,"status":"Статус не указан; оставить по исходной схеме","source_label_handle":"17BE7","position_source":"Начало исходной W09, совпадающее с условным знаком у левой подписи скв.; рядом с 205,03","number_source":"Номер 24/08-П: указание пользователя; местный знак уточняется","label_x":null,"label_y":null},"geometry":{"type":"Point","coordinates":[1400890.55000047,458235.6540396]}},
+{"type":"Feature","properties":{"fid":2,"id":"S2","label":"Скв2","number":"24/08-П","status":"Должна работать — по указанию пользователя; фактическая работа не проверена","source_label_handle":"142F1","position_source":"Центр исходного блочного знака BL_985, handle 122AE","number_source":"Номер на среднем местном знаке: подтверждение пользователя 07.10.2026","label_x":null,"label_y":null},"geometry":{"type":"Point","coordinates":[1400922.61419228,458238.52051135]}},
+{"type":"Feature","properties":{"fid":3,"id":"S3","label":"Скв3 нед.","number":null,"status":"Недействительна — по указанию пользователя","source_label_handle":"17BE8","position_source":"Центр исходного знака BL_48, handle 122AB; конец W10","number_source":"Номер 24/08-П: указание пользователя; местный знак уточняется","label_x":null,"label_y":null},"geometry":{"type":"Point","coordinates":[1400945.17497467,458236.99103503]}}
+]
+}

@@ -1,0 +1,32 @@
+{
+"type": "FeatureCollection",
+"name": "Легенда_схемы_объектов",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"xy_coordinate_resolution": 1e-08,
+"features": [
+{"type":"Feature","properties":{"fid":1,"label":"СХЕМА ОБЪЕКТОВ ФЕРМЫ"},"geometry":{"type":"Point","coordinates":[1401240.0,458385.0]}},
+{"type":"Feature","properties":{"fid":2,"label":"Рабочая версия · 08.10.2026"},"geometry":{"type":"Point","coordinates":[1401240.0,458365.0]}},
+{"type":"Feature","properties":{"fid":3,"label":"Север ↑"},"geometry":{"type":"Point","coordinates":[1401240.0,458345.0]}},
+{"type":"Feature","properties":{"fid":4,"label":"К1–К15 — корпуса"},"geometry":{"type":"Point","coordinates":[1401240.0,458325.0]}},
+{"type":"Feature","properties":{"fid":5,"label":"ДМБ — доильно-молочный блок"},"geometry":{"type":"Point","coordinates":[1401240.0,458305.0]}},
+{"type":"Feature","properties":{"fid":6,"label":"СТ — силосные траншеи"},"geometry":{"type":"Point","coordinates":[1401240.0,458285.0]}},
+{"type":"Feature","properties":{"fid":7,"label":"ЗС — зерносклад"},"geometry":{"type":"Point","coordinates":[1401240.0,458265.0]}},
+{"type":"Feature","properties":{"fid":8,"label":"Г — переходные галереи"},"geometry":{"type":"Point","coordinates":[1401240.0,458245.0]}},
+{"type":"Feature","properties":{"fid":9,"label":"КПП Верх — верхний КПП"},"geometry":{"type":"Point","coordinates":[1401240.0,458225.0]}},
+{"type":"Feature","properties":{"fid":10,"label":"КПП Низ — нижний КПП"},"geometry":{"type":"Point","coordinates":[1401240.0,458205.0]}},
+{"type":"Feature","properties":{"fid":11,"label":"Корпуса — голубой"},"geometry":{"type":"Point","coordinates":[1401240.0,458185.0]}},
+{"type":"Feature","properties":{"fid":12,"label":"Корма и склады — охра"},"geometry":{"type":"Point","coordinates":[1401240.0,458165.0]}},
+{"type":"Feature","properties":{"fid":13,"label":"Площадки — оливковый"},"geometry":{"type":"Point","coordinates":[1401240.0,458145.0]}},
+{"type":"Feature","properties":{"fid":14,"label":"Водоёмы — бирюзовый"},"geometry":{"type":"Point","coordinates":[1401240.0,458125.0]}},
+{"type":"Feature","properties":{"fid":15,"label":"Служебные объекты — лиловый"},"geometry":{"type":"Point","coordinates":[1401240.0,458105.0]}},
+{"type":"Feature","properties":{"fid":16,"label":"Галереи — серый"},"geometry":{"type":"Point","coordinates":[1401240.0,458085.0]}},
+{"type":"Feature","properties":{"fid":17,"label":"Контуры объектов схематические"},"geometry":{"type":"Point","coordinates":[1401240.0,458065.0]}},
+{"type":"Feature","properties":{"fid":18,"label":"Номера — по карте комплекса"},"geometry":{"type":"Point","coordinates":[1401240.0,458045.0]}},
+{"type":"Feature","properties":{"fid":19,"label":"Спорные привязки — в реестре"},"geometry":{"type":"Point","coordinates":[1401240.0,458025.0]}},
+{"type":"Feature","properties":{"fid":20,"label":"ДМБ: помещения не разделены"},"geometry":{"type":"Point","coordinates":[1401240.0,458005.0]}},
+{"type":"Feature","properties":{"fid":21,"label":"СТ5: положение не установлено"},"geometry":{"type":"Point","coordinates":[1401240.0,457985.0]}},
+{"type":"Feature","properties":{"fid":22,"label":"Размеры по схеме не измерять"},"geometry":{"type":"Point","coordinates":[1401240.0,457965.0]}},
+{"type":"Feature","properties":{"fid":23,"label":"* — предварительное положение"},"geometry":{"type":"Point","coordinates":[1401240.0,457945.0]}},
+{"type":"Feature","properties":{"fid":24,"label":"Скв, Р — скважины и резервуары"},"geometry":{"type":"Point","coordinates":[1401240.0,457925.0]}}
+]
+}
