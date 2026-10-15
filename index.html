@@ -160,7 +160,13 @@ const AUTH={login:"admin",password:"agroinvest2026"};
 const PUBLIC_CODES=["01"];
 const ALWAYS_VISIBLE_KEYS=["Сектора"];
 const PLAN_IMAGE = "plan.png";
-const PLAN_X = -410, PLAN_Y = -320, PLAN_W = 1300, PLAN_H = 1300, PLAN_OPACITY = 0.5;
+const PLAN_OPACITY = 0.5;
+
+// Охват плана — из окна экспорта QGIS (Проект → Импорт/Экспорт → Экспортировать карту в изображение)
+const PLAN_WEST  = 1399823.3650;
+const PLAN_EAST  = 1401999.7978;
+const PLAN_NORTH = 458853.8230;
+const PLAN_SOUTH = 457662.0310;
 
 const SECTORA={"type":"FeatureCollection","features":[
 {"type":"Feature","properties":{"fid":1,"code":"С1-С","name":"Северный","group_name":"Сектора"},"geometry":{"type":"MultiPolygon","coordinates":[[[[1400880,458175],[1400880,458521],[1401220,458521],[1401220,458175],[1400880,458175]]]]}},
@@ -367,7 +373,15 @@ function renderPlan(){
   FM.svg.appendChild(el("rect",{x:-5000,y:-5000,width:12000,height:12000,fill:"url(#bg-grad)"}));
   FM.svg.appendChild(el("rect",{x:-5000,y:-5000,width:12000,height:12000,fill:"url(#grid-pat)"}));
   FM.svg.appendChild(el("rect",{x:-5000,y:-5000,width:12000,height:12000,fill:"url(#grid-pat-bold)"}));
-  const planImg=el("image",{href:PLAN_IMAGE,x:PLAN_X,y:PLAN_Y,width:PLAN_W,height:PLAN_H,preserveAspectRatio:"none",opacity:PLAN_OPACITY});
+ // Автоматически вычисляем положение плана по данным QGIS
+const planTL = project(PLAN_WEST, PLAN_NORTH);   // верхний левый
+const planBR = project(PLAN_EAST, PLAN_SOUTH);   // нижний правый
+const planX = planTL[0];
+const planY = planTL[1];
+const planW = planBR[0] - planTL[0];
+const planH = planBR[1] - planTL[1];
+
+const planImg=el("image",{href:PLAN_IMAGE,x:planX,y:planY,width:planW,height:planH,preserveAspectRatio:"none",opacity:PLAN_OPACITY});
   planImg.style.mixBlendMode="multiply";
   FM.svg.appendChild(planImg);
   const byGroup={};
