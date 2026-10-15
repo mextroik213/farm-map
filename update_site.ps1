@@ -63,4 +63,21 @@ Set-Content -Path $dataJs -Value $sb.ToString() -Encoding UTF8
 Write-Host ""
 Write-Host "Matched: $matched of $($whitelist.Count)" -ForegroundColor Cyan
 Write-Host "data.js: $dataJs" -ForegroundColor Green
+
+# Автозалив на GitHub
+Write-Host "[3/3] Git push to GitHub..." -ForegroundColor Yellow
+Push-Location $root
+git add data.js
+$commitMsg = "Auto-update: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+git commit -m $commitMsg 2>&1 | Out-Null
+git push 2>&1 | Out-Null
+$pushOk = $LASTEXITCODE -eq 0
+Pop-Location
+
+if($pushOk){
+    Write-Host "Pushed to GitHub. Site updates in 1-2 min." -ForegroundColor Green
+} else {
+    Write-Host "Git push failed. Check token / internet." -ForegroundColor Red
+}
+
 Write-Host "Press F5 in browser" -ForegroundColor Green

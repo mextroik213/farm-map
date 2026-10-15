@@ -9,7 +9,7 @@ import sys
 
 # --- Пути (поправь под себя при необходимости) ---
 PROJECT_PATH = r"C:\Users\user\Desktop\СхемаФермыQGIS\Единая_схема_фермы.qgz"
-OUT_DIR      = r"C:\Users\user\Desktop\farm-map\data"
+OUT_DIR = r"C:\Users\user\Desktop\farm-map-git\data"
 
 # Слои, которые НЕ нужно выгружать (подложки, декор)
 SKIP_NAMES = ["Общий фон", "План фермы", "подложка"]
