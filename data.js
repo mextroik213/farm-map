@@ -1,4 +1,4 @@
-﻿// Auto-generated at 2026-10-15 09:26
+﻿// Auto-generated at 2026-10-15 09:29
 const QGIS_DATA = {
   "В___сектора_и_подсектора": {
 "type": "FeatureCollection",
